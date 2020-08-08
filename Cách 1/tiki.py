@@ -9,11 +9,11 @@ start_url = "https://tiki.vn"
 page_url = "&_lc=&page={}"
 form_url = "https://tiki.vn{}"
 
-product_id_file = "D:/KTLab/PythonProject/untitled/tiki_product/tiki_product/data/product-id.txt"
-product_data_file = "D:/KTLab/PythonProject/untitled/tiki_product/tiki_product/data/product.txt"
-product_type_file = "D:/KTLab/PythonProject/untitled/tiki_product/tiki_product/data/product-type.txt"
-product_file = "D:/KTLab/PythonProject/untitled/tiki_product/tiki_product/data/product.csv"
-newpage = "D:/KTLab/PythonProject/untitled/tiki_product/tiki_product/data/newpage.txt"
+product_id_file = "/data/product-id.txt"
+product_data_file = "/data/product.txt"
+product_type_file = "/data/product-type.txt"
+product_file = "/data/product.csv"
+newpage = "/data/newpage.txt"
 
 #lấy danh sách link các loại sản phẩm
 def crawl_product_type():
