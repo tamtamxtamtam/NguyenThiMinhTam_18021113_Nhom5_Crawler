@@ -14,4 +14,6 @@ Website : Tiki.vn
 
 -Get() các trường cần tìm (chi tiết trong file code tiki.py)
 
++Tùy vào thời điểm mà có thể kéo về nhiều hay ít link sản phẩm, thường thì sẽ chỉ kéo được khoảng hơn 15k link
+
 *Ghi chú: do tiki.vn hạn chế truy cập nên dẫn đến một số trường dữ liệu bị mất, em thêm vài đk if khi get(), try catch, response.status_code để tránh lỗi, hơi dài dòng, mong thầy cô bỏ qua.
