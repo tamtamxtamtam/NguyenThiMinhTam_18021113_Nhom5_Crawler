@@ -14,4 +14,4 @@ Website : Tiki.vn
 
 -Get() các trường cần tìm (chi tiết trong file code tiki.py)
 
-*Ghi chú: do tiki.vn hạn chế truy cập nên dẫn đến một số trường dữ liệu bị mất, em thêm vài đk if khi get() để tránh lỗi, hơi dài dòng, mong thầy cô bỏ qua.
+*Ghi chú: do tiki.vn hạn chế truy cập nên dẫn đến một số trường dữ liệu bị mất, em thêm vài đk if khi get(), try catch, response.status_code để tránh lỗi, hơi dài dòng, mong thầy cô bỏ qua.
