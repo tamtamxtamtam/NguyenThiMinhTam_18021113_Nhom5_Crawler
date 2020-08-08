@@ -5,8 +5,6 @@ import io
 import re
 from http.client import IncompleteRead
 
-
-
 start_url = "https://tiki.vn"
 page_url = "&_lc=&page={}"
 form_url = "https://tiki.vn{}"
@@ -42,7 +40,6 @@ def save_product_type(product_type_list=[]):
 #lấy link từng sản phẩm
 def crawl_product_id(product_type_list=[]):
     print(product_type_list[0])
-    print("hello")
     product_list = []
 
     for url in product_type_list:
@@ -76,7 +73,6 @@ def save_product_id(product_list=[]):
 def crawl_product(product_list=[]):
     file = io.open(product_file, "w", encoding="utf-8")
     csv_writer = csv.writer(file)
-
     count = 0
     if count == 0:
         csv_writer.writerow([
@@ -84,8 +80,8 @@ def crawl_product(product_list=[]):
             'description', 'info'
         ])
         count += 1
+        
     for a in product_list:
-
         url = form_url.format(a)
         try:
             response = requests.get(url)
@@ -94,8 +90,6 @@ def crawl_product(product_list=[]):
         if (response.status_code != 200):
             continue
 
-
-        print(response)
         parser = BeautifulSoup(response.text, 'html.parser')
         if (parser.title is not None):
             name = parser.title.string
@@ -150,15 +144,12 @@ def crawl_product(product_list=[]):
 
     return
 
-
 product_type_list, page1 = crawl_product_type()
-
 save_product_type(product_type_list)
 print("No. Type", len(product_type_list))
 
 # crawl product id
 product_list, page = crawl_product_id(product_type_list)
-
 print("No. Page: ", page)
 print("No. Product ID: ", len(product_list))
 
@@ -166,9 +157,4 @@ print("No. Product ID: ", len(product_list))
 save_product_id(product_list)
 
 # crawl detail for each product id
-
 page2 = crawl_product(product_list)
-
-# product_list = load_raw_product()
-# save product to csv
-#save_product_list()
