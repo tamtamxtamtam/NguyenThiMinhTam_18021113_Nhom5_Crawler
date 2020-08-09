@@ -5,6 +5,7 @@ www.kaggle.com/dataset/c1b1f07dc57f27e7cd2e862703c730ae03f3fe19e2aa93c2e842cef4f
 Website : Tiki.vn
 
 (Sử dụng thêm beautifulsoup)
++Ta dùng cách kéo 1 loạt link của các sản phẩm về mà không dùng việc loang do chế độ recommend của các trang thương mại điện tử có thể dẫn đến việc sẽ lặp đi lặp lại một vài sản phẩm nhất định
 
 -Trên trang chủ của Tiki kéo link các danh mục về lưu trong product_type.txt
 
