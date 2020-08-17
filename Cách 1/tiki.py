@@ -5,15 +5,17 @@ import io
 import re
 from http.client import IncompleteRead
 
+
+
 start_url = "https://tiki.vn"
 page_url = "&_lc=&page={}"
 form_url = "https://tiki.vn{}"
 
-product_id_file = "/data/product-id.txt"
-product_data_file = "/data/product.txt"
-product_type_file = "/data/product-type.txt"
-product_file = "/data/product.csv"
-newpage = "/data/newpage.txt"
+product_id_file = "E:/KTLab/PythonProject/untitled/tiki_product/tiki_product/data/product-id.txt"
+product_data_file = "E:/KTLab/PythonProject/untitled/tiki_product/tiki_product/data/product.txt"
+product_type_file = "E:/KTLab/PythonProject/untitled/tiki_product/tiki_product/data/product-type.txt"
+product_file = "E:/KTLab/PythonProject/untitled/tiki_product/tiki_product/data/product.csv"
+newpage = "E:/KTLab/PythonProject/untitled/tiki_product/tiki_product/data/newpage.txt"
 
 #lấy danh sách link các loại sản phẩm
 def crawl_product_type():
@@ -31,7 +33,7 @@ def crawl_product_type():
     return product_type_list, i
 
 def save_product_type(product_type_list=[]):
-    file = io.open(product_type_file, "w+", encoding="utf-8")
+    file = io.open(product_type_file, "a", encoding="utf-8")
     str = "\n".join(product_type_list)
     file.write(str)
     file.close()
@@ -39,10 +41,12 @@ def save_product_type(product_type_list=[]):
 
 #lấy link từng sản phẩm
 def crawl_product_id(product_type_list=[]):
-    print(product_type_list[0])
+    #print(product_type_list[0])
+    print("hello")
     product_list = []
 
     for url in product_type_list:
+        #url = "https://tiki.vn/voucher-dich-vu/c11312?src=c.11312.hamburger_menu_fly_out_banner"
         i = 1
         while (True):
             print("Crawl page: ", i)
@@ -64,39 +68,44 @@ def crawl_product_id(product_type_list=[]):
     return product_list, i
 
 def save_product_id(product_list=[]):
-    file = io.open(product_id_file, "w+", encoding="utf-8")
+    file = open(product_id_file, "a", encoding="utf-8")
     str = "\n".join(product_list)
     file.write(str)
     file.close()
     print("Save file: ", product_id_file)
 
 def crawl_product(product_list=[]):
-    file = io.open(product_file, "w", encoding="utf-8")
+    file = open(product_file, "a", encoding="utf-8")
     csv_writer = csv.writer(file)
-    count = 0
+
+    count = 1
     if count == 0:
         csv_writer.writerow([
-            'name', 'sku', 'seller_name', 'seller_link', 'img_link', 'price', 'original_price', 'brief',
+            'name', 'sku', 'no_of_stars', 'no_of_comments', 'seller_name', 'seller_link', 'img_link', 'price', 'original_price', 'brief',
             'description', 'info'
         ])
         count += 1
-        
     for a in product_list:
+
         url = form_url.format(a)
+
         try:
-            response = requests.get(url)
+            response = requests.get(url, stream=True)
         except IncompleteRead:
             continue
         if (response.status_code != 200):
             continue
+
+
 
         parser = BeautifulSoup(response.text, 'html.parser')
         if (parser.title is not None):
             name = parser.title.string
         else:
             name = ""
-        if (parser.find('div', {'class': 'brand'}).find_next('span') is not None):
+        if (parser.find('div', {'class': 'brand'}) is not None):
             sku = parser.find('div', {'class': 'brand'}).find_next('span').string
+            print(sku)
         else:
             sku = ""
         if (parser.find('a', {'class': 'seller-name'}) is not None):
@@ -110,17 +119,48 @@ def crawl_product(product_list=[]):
         else:
             img_link = ""
         if (parser.find('p', {'class': 'price'}) is not None):
-            price = parser.find('p', {'class': 'price'}).text
+            p_price = re.findall(r'\d+', parser.find('p', {'class': 'price'}).text)
+            number = ''
+            for i in p_price:
+                number += i
+            price = int(number)
         else:
-            price = ""
+            price = 0
+
+        print(price)
+
         if (parser.find('p', {'class': 'original-price'}) is not None):
-            original_price = parser.find('p', {'class': 'original-price'}).find_next().find_next().text
+            original_price =  re.findall(r'\d+', parser.find('p', {'class': 'original-price'}).find_next().find_next().text)
+            number =''
+            for i in original_price:
+                number += i
+            o_price = int(number)
         else:
-            original_price = ""
+            o_price = price
+        print(o_price)
+
+
         if (parser.find('ul', {'class': 'list'})):
             brief = parser.find('ul', {'class': 'list'}).text
         else:
             brief = ""
+
+        nos = 0;
+        if (parser.find('div', {'class': 'indexstyle__Review-qd1z2k-3 kYNzX'}) is not None):
+            nos = 5
+            fullstar = parser.findAll('i', {'class':'icomoon icomoon-star disable'});
+            for i in fullstar:
+                nos -= 1
+            if (parser.find('span',{'class':'half-star'}) is not None):
+                nos -= 0.5
+        print('No of star: ', nos)
+
+        noc = 0
+        if (parser.find('a', {'class':'number'}) is not None):
+            noc = int(re.search(r'\d+', parser.find('a', {'class':'number'}).string)[0])
+        print('No of comment: ', noc)
+
+
         if (parser.find('div', {'class': 'content has-table'}) is not None):
             description = parser.find('div', {'class': 'content has-table'}).text
         else:
@@ -137,19 +177,25 @@ def crawl_product(product_list=[]):
             description1 = description1.find_next('p')
 
         csv_writer.writerow([
-            name, sku, seller_name, seller_link, img_link, price,original_price, brief, description, info
+            name, sku, nos, noc, seller_name, seller_link, img_link, price,o_price, brief, description, info
         ])
     file.close()
     print("Save file: ", product_file)
 
     return
 
+
 product_type_list, page1 = crawl_product_type()
+
 save_product_type(product_type_list)
 print("No. Type", len(product_type_list))
 
 # crawl product id
 product_list, page = crawl_product_id(product_type_list)
+
+##Test 1
+#product_list, page = crawl_product_id()
+
 print("No. Page: ", page)
 print("No. Product ID: ", len(product_list))
 
@@ -157,4 +203,10 @@ print("No. Product ID: ", len(product_list))
 save_product_id(product_list)
 
 # crawl detail for each product id
+
 page2 = crawl_product(product_list)
+
+# product_list = load_raw_product()
+# save product to csv
+#save_product_list()
+
