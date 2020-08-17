@@ -1,6 +1,6 @@
 # NguyenThiMinhTam_18021113_Nhom5_Crawler
 Thầy cô có thể xem các cột dữ liệu trực quan và nhiều hơn tại đây ạ:
-www.kaggle.com/dataset/58a85c40b058f6a49e1b939543ae5b0c5b49ffc9c16bff354770a5a0d9666d04
+www.kaggle.com/dataset/06f1da108cd20b03e757656d79499bfa65b399fdce1e05ac9ac105b952f65627
 
 Website : Tiki.vn
 
